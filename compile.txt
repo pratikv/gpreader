@@ -1,0 +1,3 @@
+please use the following compile options:
+
+g++ main.cpp --std=c++11 -O2
