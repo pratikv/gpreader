@@ -1,3 +1,4 @@
+//#define _CRT_SECURE_NO_WARNINGS
 #include <stdio.h>
 #include <stdint.h>
 #include <malloc.h>
@@ -111,7 +112,40 @@ public:
         CleanUp(&head);
     }
 
-    void Query(const char*& queries, const char*& outFile)
+    void Query(const char*& queries)
+    {
+        fi qr(queries);
+        MY_CHAR c, loc, out[10], *op;
+        do
+        {
+            c = qr.gc();
+            while (c == '\t' || c == '\n')
+                c = qr.gc();
+            if (!c)
+                return;
+            Node* ptr = head;
+            op = out;
+            bool isValid = true;
+            int cnt = 0;
+            while (c >= '0' && c <= '9')
+            {
+                if (isValid)
+                {
+                    *op++ = c;
+                    if (ptr->c[loc = c - '0'] == nullptr)
+                        isValid = false;
+                    ptr = ptr->c[loc];
+                }
+                c = qr.gc();
+            }
+            if (isValid )
+            {
+                ptr->cnt++;
+            }
+        } while (c);
+    }
+
+    void Write(const char*& queries, const char*& outFile)
     {
         fi qr(queries);
         fo output(outFile);
@@ -146,6 +180,7 @@ public:
         } while (c);
     }
 
+
     void Read(const char*& inp)
     {
         fi fr(inp);
@@ -166,7 +201,6 @@ public:
                 ptr = ptr->c[loc];
                 c = fr.gc();
             }
-            ptr->cnt++;
         } while (c);
     }
 };
@@ -177,7 +211,8 @@ int main()
     const char* queries = "C:/pratik/ThirdParty/GraphFile/queries";
     const char* output = "C:/pratik/ThirdParty/GraphFile/out.txt";
     ReadWrite f;
-    f.Read(fileName);
-    f.Query(queries, output);
+    f.Read(queries);
+    f.Query(fileName);
+    f.Write(queries, output);
     return 0;
 }
